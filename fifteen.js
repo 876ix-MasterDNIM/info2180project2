@@ -33,49 +33,52 @@ function layoutBoard()
     BOARD[15] = 0;
 }
 
+function move(tile, indexToMoveTo)
+{
+    positionX(tile, indexToMoveTo);
+    positionY(tile, indexToMoveTo);
+
+    BOARD[indexToMoveTo] = 1;
+    console.log(tile.id); //FIXME
+    console.log(BOARD[tile.id]); //FIXME
+    BOARD[tile.id] = 0;
+    tile.id = indexToMoveTo;
+    console.log(tile.id); //FIXME
+}
+
+function makeMove(tile)
+{
+    puzzlePieces[tile].onclick = function()
+    {
+        var indexToMoveTo = movableTile(parseInt(puzzlePieces[tile].id));
+        console.log("INDEX:" + indexToMoveTo); //FIXME
+        if (indexToMoveTo != -1)
+        {
+            move(puzzlePieces[tile], indexToMoveTo);
+        }
+    }
+}
+
+function makeRandomMove(tile)
+{
+    var indexToMoveTo = emptyTile();
+    move(puzzlePieces[tile], indexToMoveTo);
+}
+
 function layoutBoardRandom()
 {
-  var randomIndices = [];
-  while (randomIndices.length < 16)
-  {
-    var randomNumber = Math.ceil(Math.random() * 15);
-    var repeatingRandom = false;
-
-    for (var i = 0; i < randomIndices.length; i++)
+    for (var n = 0; n < 10; n++)
     {
-      if (randomIndices[i] === randomNumber)
-      {
-        repeatingRandom = true;
-        break;
-      }
-      if (!repeatingRandom)
-      {
-        randomIndices[randomIndices.length] = randomNumber;
-      }
+        var i = Math.floor(Math.random() * 15);
+        console.log("RANDOM: " +i);
+        makeRandomMove(i);
     }
-  }
-    puzzlePieces = $$('#puzzlearea div');
-    var idCounter = 0;
-  puzzlePieces.each(function(element)
-  {
-      element.addClassName('puzzlepiece');
-      element.id = randomIndices[idCounter];
-      console.log(element.id); //FIXME
-      arrangeTiles(element, randomIndices[idCounter]);
-      BOARD[idCounter] = 1;
-      idCounter++;
-  });
-  BOARD[15] = 0;
+
 }
 
 function shuffle()
 {
   layoutBoardRandom();
-  for (var i = 0; i < 15; i++) //FIXME change to each loop
-  {
-      makeMove(i);
-      onHover(i);
-  }
 }
 
 function gameOn()
@@ -127,31 +130,7 @@ function positionX(tile, index)
 
 }
 
-function move(tile, indexToMoveTo)
-{
-    positionX(tile, indexToMoveTo);
-    positionY(tile, indexToMoveTo);
 
-    BOARD[indexToMoveTo] = 1;
-    console.log(tile.id); //FIXME
-    console.log(BOARD[tile.id]); //FIXME
-    BOARD[tile.id] = 0;
-    tile.id = indexToMoveTo;
-    console.log(tile.id); //FIXME
-}
-
-function makeMove(tile)
-{
-    puzzlePieces[tile].onclick = function()
-    {
-        var indexToMoveTo = movableTile(parseInt(puzzlePieces[tile].id));
-        console.log("INDEX:" + indexToMoveTo); //FIXME
-        if (indexToMoveTo != -1)
-        {
-            move(puzzlePieces[tile], indexToMoveTo);
-        }
-    }
-}
 
 function emptyTile()
 {
